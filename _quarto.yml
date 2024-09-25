@@ -12,6 +12,10 @@ website:
   back-to-top-navigation: true
   title: "Tp3_Svm"
   sidebar: true
+  format:
+  html:
+    fig-width: 7
+    fig-height: 5
   navbar:
     search: true
     tools: 
