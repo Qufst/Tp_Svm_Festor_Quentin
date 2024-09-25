@@ -18,10 +18,9 @@ jobs:
       - name: Installer Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
+
           environment-file: environment.yml
 
-      - name: activer l'env
-        run: micromamba activate myenv
 
 
       #- name: nbformat
@@ -32,6 +31,9 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Actualiser le site avec Quarto
-        run: quarto publish
+        run: |
+          source ~/micromamba/etc/profile.d/micromamba.sh
+          micromamba activate myenv
+          quarto publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
