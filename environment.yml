@@ -12,4 +12,8 @@ dependencies:
   - seaborn
   - pandas        
   - scipy         
-  - ipykernel     
+  - ipykernel
+  - pathlib
+  - time
+  - warnings
+  - pyyaml    
