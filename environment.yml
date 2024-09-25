@@ -1,0 +1,16 @@
+name: myenv
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - jupyter
+  - matplotlib
+  - numpy
+  - nbformat
+  - tkinter
+  - scikit-learn  # Updated the name from sklearn
+  - seaborn
+  - pandas        # Optional: for data manipulation
+  - scipy         # Optional: for scientific computations
+  - ipykernel     # Optional: to use Jupyter kernels with this environment

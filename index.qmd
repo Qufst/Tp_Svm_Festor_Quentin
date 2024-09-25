@@ -1,0 +1,367 @@
+---
+title: "Tp3_Svm"
+subtitle: "Example dedicated to `Python` users"
+date: 23/09/2024
+format: html
+author:
+  - name: Quentin Festor
+    corresponding: true
+    email: quentin.festor@etu.umontpellier.fr
+    affiliations:
+      - name: Master Ssd, deuxième année option Biostat
+
+jupyter: python3
+---
+
+# Introduction aux Svm
+Les machines à vecteurs de support (SVM, pour Support Vector Machines) sont une famille d'algorithmes d'apprentissage supervisé largement utilisés pour résoudre des problèmes de classification et de régression. Leur principe repose sur la recherche de la meilleure séparation possible entre différentes classes de données à l'aide d'hyperplans.
+
+Comme énoncé précédemment, l'objectif principal d'un SVM est de trouver un hyperplan (une frontière) qui sépare les classes de manière optimale, en maximisant la marge entre les points les plus proches de chaque classe, appelés vecteurs de support. Ce type de modèle est particulièrement apprécié pour sa capacité à gérer des données complexes, voire non linéaires, grâce à l'utilisation de la méthode du noyau.
+
+Cas linéaire : Si les données sont linéairement séparables, l'algorithme trouve un hyperplan qui sépare les classes en maximisant la distance entre les vecteurs de support des deux classes.
+
+Cas non linéaire : Si les données ne peuvent pas être séparées par une simple ligne (ou un plan dans des dimensions plus élevées), les SVM utilisent des fonctions noyau (kernel functions) pour transformer les données dans un espace de plus haute dimension où une séparation linéaire devient possible. On a alors plusieurs possibilités, nous utiliserons principalement les noyaux linéaire, polynomiale et gaussien. 
+
+Dans ce tp, l'objectif sera d'explorer l'application des SVM en comparant les performances des modèles avec les différents noyaux et en faisant varier les hyperparamètres afin de comprendre les impacts de ces manipulations.
+
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
+import sys
+from pathlib import Path
+
+# Ajout du chemin du dossier "code" où se trouve le fichier svm_gui.py
+sys.path.append(str("fichier_python"))
+
+# Importation de la classe (remplace "NomDeLaClasse" par le nom de la classe réelle)
+from svm_gui import *
+from svm_source import *
+from sklearn import svm
+from sklearn import datasets
+from sklearn.utils import shuffle
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.datasets import fetch_lfw_people
+from sklearn.decomposition import PCA
+from time import time
+
+scaler = StandardScaler()
+
+import warnings
+warnings.filterwarnings("ignore")
+
+plt.style.use('ggplot')
+```
+
+Pour ce compte rendu, il a été décidé de laisser le code en annèxe afin de ne pas gacher la rédaction. On n'affichera dans la partie principale seulement les résultats commentés ainsi que les graphiques, sauf si l'apparition du code semble pertinante pour la rédaction. 
+
+# Mise en oeuvre
+
+## Question 1) Kernel linéaire
+
+Nous reprenons le code donné en annexe concernant l'utilisation des SVM et l'appliquons à nos données Iris. Tout d'abord, nous classifions la classe 1 contre la classe 2 en utilisant uniquement les deux premières variables caractéristiques et un noyau linéaire. Les données sont ensuite séparées de manière équitable en deux échantillons : un pour l'entraînement et un pour le test, afin d'évaluer la qualité de notre modèle.
+
+Nous évaluons ensuite la performance du modèle sur les données d'entraînement, puis sur les données de test, et obtenons les scores suivants :
+
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+iris = datasets.load_iris()
+X = iris.data
+X = scaler.fit_transform(X)
+y = iris.target
+X = X[y != 0, :2]
+y = y[y != 0]
+
+# split train test
+X, y = shuffle(X, y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)  # Modified to split the data
+
+# fit the model
+parameters = {'kernel': ['linear'], 'C': list(np.logspace(-3, 3, 200))}
+clf_linear = GridSearchCV(SVC(), parameters, cv=5)  # Modified to use GridSearchCV for tuning C
+clf_linear.fit(X_train, y_train)
+
+# compute the score
+print('Generalization score for linear kernel: %s, %s' %
+      (clf_linear.score(X_train, y_train),
+       clf_linear.score(X_test, y_test)))
+
+```
+
+L'analyse de ces résultats montre que le modèle SVM avec un noyau linéaire a une précision de 76 % sur les données d'entraînement, ce qui indique une bonne adéquation initiale du modèle. Cependant, une baisse de performance est observée sur les données de test, avec une précision de 66 %, ce qui peut indiquer que le modèle a un léger problème de généralisation. Cela suggère que le modèle ne capture peut-être pas parfaitement la complexité des données, ou qu'il y a peut-être un léger surapprentissage sur l'ensemble d'entraînement. 
+Ce résultat nous donne envie de de tester un autre noyau afin de vérifier si un noyau différent améliorerait la capacité de généralisation.
+
+## Question 2) kernel polynomial
+
+Après avoir observé des résultats mitigés avec le noyau linéaire, nous décidons d’utiliser un noyau polynomial et de comparer ses performances. Nous utilisons évidemment la même séparation des données pour garantir une comparaison juste entre les deux approches.
+
+Les paramètres optimaux trouvés avec la validation croisée sont: 
+
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+# Q2 polynomial kernel
+Cs = list(np.logspace(-3, 3, 5))
+gammas = 10. ** np.arange(1, 2)
+degrees = np.r_[1, 2, 3]
+
+parameters = {'C': Cs, 'gamma': gammas, 'degree': degrees, 'kernel': ['poly']}
+clf_poly = GridSearchCV(SVC(),param_grid=parameters,n_jobs = -1 )  # Modified to use GridSearchCV for tuning C, gamma, and degree
+clf_poly.fit(X_train, y_train)
+
+print(clf_poly.best_params_)
+```
+Avec ces paramètres, on trouve:
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+print('Generalization score for polynomial kernel: %s, %s' %
+      (clf_poly.score(X_train, y_train),
+       clf_poly.score(X_test, y_test)))
+```
+Le modèle SVM avec un noyau polynomial donne une précision de 70 % sur l'ensemble d'entraînement et 68 % sur l'ensemble de test. Comparé au noyau linéaire, nous constatons donc une légère amélioration de la précision sur les données de test (de 66 % à 68 %), ce qui montre que le noyau polynomial capte légèrement mieux les relations dans les données, notamment des interactions non linéaires.
+Cependant, on observe également une diminution de la précision sur les données d'entraînement (de 76 % à 70 %), ce qui pourrait indiquer que le modèle polynomial est moins adapté à la structure linéaire des données.
+
+L'augmentation de la précision sur le test, bien que marginale, suggère que le modèle polynomial pourrait mieux généraliser dans ce contexte. Toutefois, l'amélioration n'est pas suffisamment significative pour justifier l'usage d'un noyau polynomial complexe dans ce cas particulier. Le noyau linéaire reste donc une option solide pour ce type de problème.
+
+Les graphiques ci-dessous illustrent les deux classifications des données de l'ensemble Iris utilisées ci-dessus.
+
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+
+# display your results using frontiere
+
+def f_linear(xx):
+    """Classifier: needed to avoid warning due to shape issues"""
+    return clf_linear.predict(xx.reshape(1, -1))
+
+def f_poly(xx):
+    """Classifier: needed to avoid warning due to shape issues"""
+    return clf_poly.predict(xx.reshape(1, -1))
+
+plt.ion()
+plt.figure(figsize=(15, 5))
+plt.subplot(131)
+plot_2d(X, y)
+plt.title("iris dataset")
+
+plt.subplot(132)
+frontiere(f_linear, X, y)
+plt.title("linear kernel")
+
+plt.subplot(133)
+frontiere(f_poly, X, y)
+
+plt.title("polynomial kernel")
+plt.tight_layout()
+plt.draw()
+```
+
+# Classification de visages
+
+Désormais on utilise une seconde base de données, comprenant des images de visages, et on souhaite classifier ces visages. D'abord on ne garde que les personnes possédant au moins 70 photos de leur visage, puis on redimensionne la taille des images car celles-ci prennent beaucoup de place.  
+Le code a pour objectif de télécharger un sous-ensemble du dataset LFW, de sélectionner les images de deux personnes spécifiques (Tony Blair et Colin Powell) et de préparer ces données pour une tâche de classification binaire.
+On peut visualiser un échantillon des images ci-dessous:
+```{python, echo = FALSE, eval = TRUE}
+"""
+The dataset used in this example is a preprocessed excerpt
+of the "Labeled Faces in the Wild", aka LFW_:
+
+  http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz (233MB)
+
+  _LFW: http://vis-www.cs.umass.edu/lfw/
+"""
+# Download the data and unzip; then load it as numpy arrays
+lfw_people = fetch_lfw_people(min_faces_per_person=70, resize=0.4,
+                              color=True, funneled=False, slice_=None,
+                              download_if_missing=True)
+                              # data_home='.'
+
+# introspect the images arrays to find the shapes (for plotting)
+images = lfw_people.images
+n_samples, h, w, n_colors = images.shape
+
+# the label to predict is the id of the person
+target_names = lfw_people.target_names.tolist()
+
+# Pick a pair to classify such as
+names = ['Tony Blair', 'Colin Powell']
+# names = ['Donald Rumsfeld', 'Colin Powell']
+
+idx0 = (lfw_people.target == target_names.index(names[0]))
+idx1 = (lfw_people.target == target_names.index(names[1]))
+images = np.r_[images[idx0], images[idx1]]
+n_samples = images.shape[0]
+y = np.r_[np.zeros(np.sum(idx0)), np.ones(np.sum(idx1))].astype(int)
+
+# plot a sample set of the data
+plot_gallery(images, np.arange(12))
+plt.show()
+```
+Une fois les données préparées de cette manière, elles peuvent être utilisées pour entraîner un modèle de classification, par exemple un SVM ou un réseau de neurones, pour distinguer les visages de Tony Blair et de Colin Powell.
+
+## Question 4) Influence du paramètre de régularisation
+
+Comme précédemment, on sépare nos données en deux échantillons de tailles distinctes pour avoir un échantillon d'entrainement et un échantillon de test. On veut montrer l'influence du paramètre de régularisation. Pour ce faire, on décide d'afficher l'erreur de prédiction sur une échelle logarithmique entre 1e5 et 1e-5., et on obtient:
+
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+
+# Extract features
+
+# features using only illuminations
+X = (np.mean(images, axis=3)).reshape(n_samples, -1)
+
+# # or compute features using colors (3 times more features)
+# X = images.copy().reshape(n_samples, -1)
+
+# Scale features
+X -= np.mean(X, axis=0)
+X /= np.std(X, axis=0)
+# Split data into a half training and half test set
+# X_train, X_test, y_train, y_test, images_train, images_test = \
+#    train_test_split(X, y, images, test_size=0.5, random_state=0)
+# X_train, X_test, y_train, y_test = \
+#    train_test_split(X, y, test_size=0.5, random_state=0)
+
+indices = np.random.permutation(X.shape[0])
+train_idx, test_idx = indices[:X.shape[0] // 2], indices[X.shape[0] // 2:]
+X_train, X_test = X[train_idx, :], X[test_idx, :]
+y_train, y_test = y[train_idx], y[test_idx]
+images_train, images_test = images[
+    train_idx, :, :, :], images[test_idx, :, :, :]
+
+```
+Le meilleur paramètre C est celui qui donne le score de test le plus élevé.
+
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+print("--- Linear kernel ---")
+print("Fitting the classifier to the training set")
+t0 = time()
+
+# fit a classifier (linear) and test all the Cs
+Cs = 10. ** np.arange(-5, 6)
+scores = []
+for C in Cs:
+    clf = SVC(kernel='linear', C=C)
+    clf.fit(X_train, y_train)
+    scores.append(clf.score(X_train, y_train)) 
+
+ind = np.argmax(scores)
+best_C = Cs[ind]
+print("Best C: {}".format(Cs[ind]))
+
+plt.figure()
+plt.plot(Cs, scores)
+plt.xlabel("Parametres de regularisation C")
+plt.ylabel("Scores d'apprentissage")
+plt.xscale("log")
+plt.tight_layout()
+plt.show()
+print("Best score: {}".format(np.max(scores)))
+
+print("Predicting the people names on the testing set")
+t0 = time()
+```
+Dans ce cas, le meilleur C est 1e-3 avec un score de 1. Pour des valeurs de C plus grandes, le score reste stable ce qui indique que les performances se stabilisent.
+
+Maintenant que nous avons identifié le meilleur C, nous réentraînons le modèle avec cette valeur, et nous effectuons des prédictions finales pour l'ensemble de test. Nous comparons ensuite la précision obtenue à un niveau de chance (prédiction aléatoire).
+```{python, echo = FALSE, eval = TRUE}
+# predict labels for the X_test images with the best classifier
+clf = SVC(kernel='linear', C=best_C)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+
+print("done in %0.3fs" % (time() - t0))
+# The chance level is the accuracy that will be reached when constantly predicting the majority class.
+print("Chance level : %s" % max(np.mean(y), 1. - np.mean(y)))
+print("Accuracy : %s" % clf.score(X_test, y_test))
+```
+Nous obtenons que la précision du modèle pour les données de test est de 0.89, alors que le taux de chance (niveau aléatoire) est de 0.62. Cela signifie que le modèle a une performance bien supérieure au hasard, ce qui indique qu'il a bien appris à distinguer les classes à partir des caractéristiques fournies.
+
+L'échantillon d'images du premier document ci-dessous illustre les résultats de l'algorithme.
+La deuxième image obtenue montre les coefficients du modèle linéaire appris sous la forme d'une carte de chaleur. Cela permet de visualiser quelles parties des images sont les plus importantes pour le classifieur afin de prendre ses décisions. Ces zones correspondent à des caractéristiques importantes identifiées par le modèle dans les images.
+```{python}
+# Qualitative evaluation of the predictions using matplotlib
+
+prediction_titles = [title(y_pred[i], y_test[i], names)
+                     for i in range(y_pred.shape[0])]
+
+plot_gallery(images_test, prediction_titles)
+plt.show()
+# Look at the coefficients
+plt.figure()
+plt.imshow(np.reshape(clf.coef_, (h, w)))
+plt.show()
+```
+Les zones importantes pour la prédiction semblent être l'implantation des cheveux au niveau du front, lenez, les yeux, ainsi que la bouche et la forme du crâne. 
+
+## Question 5) Ajout de nuisance sur les variables 
+
+Ajouter des variables de nuisance dans les données d'apprentissage est une méthode pour évaluer la robustesse et la capacité de généralisation d'un modèle de classification. Les variables de nuisance sont des caractéristiques ajoutées artificiellement qui n'ont aucune relation avec la variable cible. Il peut y avoir plusieurs objectifs à cet ajout.  L'objectif principal est d'examiner l'impact de ces variables sur la performance du modèle et de vérifier si le modèle peut encore faire des prédictions précises malgré la présence de ces informations non pertinentes.
+
+```{python}
+def run_svm_cv(_X, _y):
+    _indices = np.random.permutation(_X.shape[0])
+    _train_idx, _test_idx = _indices[:_X.shape[0] // 2], _indices[_X.shape[0] // 2:]
+    _X_train, _X_test = _X[_train_idx, :], _X[_test_idx, :]
+    _y_train, _y_test = _y[_train_idx], _y[_test_idx]
+
+    _parameters = {'kernel': ['linear'], 'C': list(np.logspace(-3, 3, 5))}
+    _svr = svm.SVC()
+    _clf_linear = GridSearchCV(_svr, _parameters)
+    _clf_linear.fit(_X_train, _y_train)
+
+    print('Generalization score for linear kernel: %s, %s \n' %
+          (_clf_linear.score(_X_train, _y_train), _clf_linear.score(_X_test, _y_test)))
+
+print("Score sans variable de nuisance")
+run_svm_cv(X, y) 
+
+print("Score avec variable de nuisance")
+n_features = X.shape[1]
+# On rajoute des variables de nuisances
+sigma = 1
+noise = sigma * np.random.randn(n_samples, 300, )
+X_noisy = np.concatenate((X, noise), axis=1)
+X_noisy = X_noisy[np.random.permutation(X.shape[0])]
+run_svm_cv(X_noisy, y) 
+```
+Sans ajout de variables de nuisance, le modèle atteint une précision parfaite de 1.0 sur l'ensemble d'entraînement, et une précision de 0.9 sur l'ensemble de test. Cela indique que le modèle est très performant et capable de bien généraliser sur des données non vues.
+
+Lorsque des variables de nuisance sont ajoutées, la précision sur l'ensemble de test chute considérablement à environ 0.51, près du niveau de chance pour ce problème (0.62). Cependant, la précision sur l'ensemble d'entraînement reste à 1.0. Ce résultat montre que, bien que le modèle continue à bien performer sur les données d'entraînement, il est moins capable de généraliser sur de nouvelles données lorsqu'il est confronté à des informations non pertinentes.
+
+## Question 6) Réduction des dimensions PCA
+
+Après avoir examiné l'impact des variables de nuisance sur la performance du modèle, il est pertinent de se pencher sur une autre technique importante de prétraitement des données : la réduction de dimensions. En utilisant l'Analyse en Composantes Principales (PCA), nous cherchons à réduire le nombre de caractéristiques tout en conservant autant d'information que possible. Cette méthode peut aider à améliorer la performance du modèle en éliminant le bruit et en simplifiant la représentation des données.
+Nous allons donc appliquer la PCA sur les données perturbées par le bruit et évaluer comment cette réduction de dimension influence la précision du modèle SVM. On essaie une fois avec 20 composantes, une fois avec 80, et une fois avec 120.
+
+```{python}
+#| echo = FALSE
+#| eval = TRUE
+
+n_components = 80  # jouer avec ce parametre
+pca = PCA(n_components=n_components).fit(X_noisy)
+X_pca = pca.transform(X_noisy)
+print("Score apres reduction de dimension PCA pour 80 composantes")
+run_svm_cv(X_pca, y) 
+n_components = 120  # jouer avec ce parametre
+pca = PCA(n_components=n_components).fit(X_noisy)
+X_pca = pca.transform(X_noisy)
+print("Score apres reduction de dimension PCA pour 120 composantes")
+run_svm_cv(X_pca, y) 
+```
+On remarque qu'avec 20 composantes les calculs sont trop longs, de même pour tout nombre inférieur à 80, donc on se contente de 80, et 120. On observe que moins on garde de composantes, plus le score remonte. Cependant il remonte faiblement, probablement car il faut diminuer largement le nombre de composantes pour obtenir un score bon, ce qui nécessite beaucoup de temps de calcul.
+
+# Conclusion
+
+Pour résumer, l'objectif avec les SVM est de maximiser les performances de prédiction en choisissant un noyau optimal et en ajustant les hyperparamètres. Après avoir divisé les données en échantillons d'entraînement et de test, un score élevé sur l'ensemble d'entraînement indique un bon ajustement initial, mais seul un score élevé sur l'ensemble de test garantit que le modèle généralisera bien sur de nouvelles données. L'ajustement du paramètre de régularisation peut améliorer la précision. 
+Nous avons également observé que l'ajout de variables de nuisance réduit les performances, mais ces dernières peuvent être restaurées en appliquant une réduction de dimension via l'analyse en composantes principales (PCA).

@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - index.qmd
+    - annexe.qmd
+
+website:
+  repo-url: https://github.com/Qufst/Tp_Svm_Festor_Quentin
+  repo-actions: [source, issue]
+  page-navigation: true
+  back-to-top-navigation: true
+  title: "Tp3_Svm"
+  sidebar: true
+  navbar:
+    search: true
+    tools: 
+      - icon: github
+        href: https://github.com/Qufst/Tp_Svm_Festor_Quentin
+        text: GitHub
+    left:
+      - href: index.qmd
+      - href: annexe.qmd
+
+
+
+jupyter: python3
+
+editor: visual
+
+
+publish:
+  gh-pages:
+    branch: gh-pages
+    orphan: true
