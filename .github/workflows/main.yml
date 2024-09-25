@@ -21,10 +21,6 @@ jobs:
           activate-environment: myenv
           environment-file: environment.yml
 
-      - name: Configuration de l'environnement Conda
-        run: |
-          micromamba create --file environment.yml --yes
-          micromamba activate myenv
             
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
