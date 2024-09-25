@@ -25,8 +25,8 @@ Cas non linéaire : Si les données ne peuvent pas être séparées par une simp
 Dans ce tp, l'objectif sera d'explorer l'application des SVM en comparant les performances des modèles avec les différents noyaux et en faisant varier les hyperparamètres afin de comprendre les impacts de ces manipulations.
 
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
@@ -67,8 +67,8 @@ Nous reprenons le code donné en annexe concernant l'utilisation des SVM et l'ap
 Nous évaluons ensuite la performance du modèle sur les données d'entraînement, puis sur les données de test, et obtenons les scores suivants :
 
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 iris = datasets.load_iris()
 X = iris.data
 X = scaler.fit_transform(X)
@@ -102,8 +102,8 @@ Après avoir observé des résultats mitigés avec le noyau linéaire, nous déc
 Les paramètres optimaux trouvés avec la validation croisée sont: 
 
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 # Q2 polynomial kernel
 Cs = list(np.logspace(-3, 3, 5))
 gammas = 10. ** np.arange(1, 2)
@@ -117,8 +117,8 @@ print(clf_poly.best_params_)
 ```
 Avec ces paramètres, on trouve:
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 print('Generalization score for polynomial kernel: %s, %s' %
       (clf_poly.score(X_train, y_train),
        clf_poly.score(X_test, y_test)))
@@ -131,8 +131,8 @@ L'augmentation de la précision sur le test, bien que marginale, suggère que le
 Les graphiques ci-dessous illustrent les deux classifications des données de l'ensemble Iris utilisées ci-dessus.
 
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 
 # display your results using frontiere
 
@@ -167,7 +167,9 @@ plt.draw()
 Désormais on utilise une seconde base de données, comprenant des images de visages, et on souhaite classifier ces visages. D'abord on ne garde que les personnes possédant au moins 70 photos de leur visage, puis on redimensionne la taille des images car celles-ci prennent beaucoup de place.  
 Le code a pour objectif de télécharger un sous-ensemble du dataset LFW, de sélectionner les images de deux personnes spécifiques (Tony Blair et Colin Powell) et de préparer ces données pour une tâche de classification binaire.
 On peut visualiser un échantillon des images ci-dessous:
-```{python, echo = FALSE, eval = TRUE}
+```{python}
+#| echo: false
+#| eval: true
 """
 The dataset used in this example is a preprocessed excerpt
 of the "Labeled Faces in the Wild", aka LFW_:
@@ -210,8 +212,8 @@ Une fois les données préparées de cette manière, elles peuvent être utilis�
 Comme précédemment, on sépare nos données en deux échantillons de tailles distinctes pour avoir un échantillon d'entrainement et un échantillon de test. On veut montrer l'influence du paramètre de régularisation. Pour ce faire, on décide d'afficher l'erreur de prédiction sur une échelle logarithmique entre 1e5 et 1e-5., et on obtient:
 
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 
 # Extract features
 
@@ -241,8 +243,8 @@ images_train, images_test = images[
 Le meilleur paramètre C est celui qui donne le score de test le plus élevé.
 
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 print("--- Linear kernel ---")
 print("Fitting the classifier to the training set")
 t0 = time()
@@ -274,7 +276,9 @@ t0 = time()
 Dans ce cas, le meilleur C est 1e-3 avec un score de 1. Pour des valeurs de C plus grandes, le score reste stable ce qui indique que les performances se stabilisent.
 
 Maintenant que nous avons identifié le meilleur C, nous réentraînons le modèle avec cette valeur, et nous effectuons des prédictions finales pour l'ensemble de test. Nous comparons ensuite la précision obtenue à un niveau de chance (prédiction aléatoire).
-```{python, echo = FALSE, eval = TRUE}
+```{python}
+#| echo: false
+#| eval: true
 # predict labels for the X_test images with the best classifier
 clf = SVC(kernel='linear', C=best_C)
 clf.fit(X_train, y_train)
@@ -290,6 +294,8 @@ Nous obtenons que la précision du modèle pour les données de test est de 0.89
 L'échantillon d'images du premier document ci-dessous illustre les résultats de l'algorithme.
 La deuxième image obtenue montre les coefficients du modèle linéaire appris sous la forme d'une carte de chaleur. Cela permet de visualiser quelles parties des images sont les plus importantes pour le classifieur afin de prendre ses décisions. Ces zones correspondent à des caractéristiques importantes identifiées par le modèle dans les images.
 ```{python}
+#| echo: false
+#| eval: true
 # Qualitative evaluation of the predictions using matplotlib
 
 prediction_titles = [title(y_pred[i], y_test[i], names)
@@ -309,6 +315,8 @@ Les zones importantes pour la prédiction semblent être l'implantation des chev
 Ajouter des variables de nuisance dans les données d'apprentissage est une méthode pour évaluer la robustesse et la capacité de généralisation d'un modèle de classification. Les variables de nuisance sont des caractéristiques ajoutées artificiellement qui n'ont aucune relation avec la variable cible. Il peut y avoir plusieurs objectifs à cet ajout.  L'objectif principal est d'examiner l'impact de ces variables sur la performance du modèle et de vérifier si le modèle peut encore faire des prédictions précises malgré la présence de ces informations non pertinentes.
 
 ```{python}
+#| echo: false
+#| eval: true
 def run_svm_cv(_X, _y):
     _indices = np.random.permutation(_X.shape[0])
     _train_idx, _test_idx = _indices[:_X.shape[0] // 2], _indices[_X.shape[0] // 2:]
@@ -345,8 +353,8 @@ Après avoir examiné l'impact des variables de nuisance sur la performance du m
 Nous allons donc appliquer la PCA sur les données perturbées par le bruit et évaluer comment cette réduction de dimension influence la précision du modèle SVM. On essaie une fois avec 20 composantes, une fois avec 80, et une fois avec 120.
 
 ```{python}
-#| echo = FALSE
-#| eval = TRUE
+#| echo: false
+#| eval: true
 
 n_components = 80  # jouer avec ce parametre
 pca = PCA(n_components=n_components).fit(X_noisy)

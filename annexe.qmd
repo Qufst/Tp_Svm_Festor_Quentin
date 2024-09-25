@@ -9,8 +9,8 @@ jupyter: python3
 ## Packages
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
@@ -43,8 +43,8 @@ plt.style.use('ggplot')
 ## Question 1) Kernel linéaire
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 iris = datasets.load_iris()
 X = iris.data
 X = scaler.fit_transform(X)
@@ -71,8 +71,8 @@ print('Generalization score for linear kernel: %s, %s' %
 ## Question 2) kernel polynomial
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 # Q2 polynomial kernel
 Cs = list(np.logspace(-3, 3, 5))
 gammas = 10. ** np.arange(1, 2)
@@ -86,16 +86,16 @@ print(clf_poly.best_params_)
 ```
 Avec ces paramètres, on trouve:
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 print('Generalization score for polynomial kernel: %s, %s' %
       (clf_poly.score(X_train, y_train),
        clf_poly.score(X_test, y_test)))
 ```
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 
 # display your results using frontiere
 
@@ -128,8 +128,8 @@ plt.draw()
 # Classification de visages
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 """
 The dataset used in this example is a preprocessed excerpt
 of the "Labeled Faces in the Wild", aka LFW_:
@@ -169,8 +169,8 @@ plt.show()
 ## Question 4) Influence du paramètre de régularisation
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 
 # Extract features
 
@@ -199,8 +199,8 @@ images_train, images_test = images[
 ```
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 print("--- Linear kernel ---")
 print("Fitting the classifier to the training set")
 t0 = time()
@@ -232,7 +232,9 @@ t0 = time()
 Dans ce cas, le meilleur C est 1e-3 avec un score de 1. Pour des valeurs de C plus grandes, le score reste stable ce qui indique que les performances se stabilisent.
 
 Maintenant que nous avons identifié le meilleur C, nous réentraînons le modèle avec cette valeur, et nous effectuons des prédictions finales pour l'ensemble de test. Nous comparons ensuite la précision obtenue à un niveau de chance (prédiction aléatoire).
-```{python, echo = FALSE, eval = TRUE}
+```{python}
+#| echo: true
+#| eval: false
 # predict labels for the X_test images with the best classifier
 clf = SVC(kernel='linear', C=best_C)
 clf.fit(X_train, y_train)
@@ -245,8 +247,8 @@ print("Accuracy : %s" % clf.score(X_test, y_test))
 ```
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 # Qualitative evaluation of the predictions using matplotlib
 
 prediction_titles = [title(y_pred[i], y_test[i], names)
@@ -263,8 +265,8 @@ plt.show()
 ## Question 5) Ajout de nuisance sur les variables 
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 def run_svm_cv(_X, _y):
     _indices = np.random.permutation(_X.shape[0])
     _train_idx, _test_idx = _indices[:_X.shape[0] // 2], _indices[_X.shape[0] // 2:]
@@ -295,8 +297,8 @@ run_svm_cv(X_noisy, y)
 ## Question 6) Réduction des dimensions PCA
 
 ```{python}
-#| echo = TRUE
-#| eval = FALSE
+#| echo: true
+#| eval: false
 
 n_components = 80  # jouer avec ce parametre
 pca = PCA(n_components=n_components).fit(X_noisy)
