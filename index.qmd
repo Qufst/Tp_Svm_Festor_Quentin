@@ -32,7 +32,6 @@ import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 import sys
 from pathlib import Path
-import nbformat
 
 # Ajout du chemin du dossier "code" où se trouve le fichier svm_gui.py
 sys.path.append(str("fichier_python"))

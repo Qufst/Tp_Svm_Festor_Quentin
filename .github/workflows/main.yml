@@ -18,14 +18,20 @@ jobs:
       - name: Installer Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          activate-environment: myenv
           environment-file: environment.yml
+
+      - name: activer l'env
+        run: micromamba activate myenv
+
+
+      #- name: nbformat
+      #  run: python3 -m pip install jupyter nbformat
 
             
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Actualiser le site avec Quarto
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-          target: gh-pages
+        run: quarto publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
