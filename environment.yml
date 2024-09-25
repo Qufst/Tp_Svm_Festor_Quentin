@@ -9,8 +9,8 @@ dependencies:
   - numpy
   - nbformat
   - tkinter
-  - scikit-learn  # Updated the name from sklearn
+  - scikit-learn  
   - seaborn
-  - pandas        # Optional: for data manipulation
-  - scipy         # Optional: for scientific computations
-  - ipykernel     # Optional: to use Jupyter kernels with this environment
+  - pandas        
+  - scipy         
+  - ipykernel     
