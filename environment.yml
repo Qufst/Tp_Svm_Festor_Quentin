@@ -13,7 +13,4 @@ dependencies:
   - pandas        
   - scipy         
   - ipykernel
-  - pathlib
-  - time
-  - warnings
-  - pyyaml    
+  - pyyaml  
