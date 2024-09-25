@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Quentin Festor">
+<meta name="dcterms.date" content="2025-11-09">
+
+<title>Tp3_Svm</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Tp3_Svm</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Tp3_Svm</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./annexe.html"> 
+<span class="menu-text">Annexe</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://github.com/Qufst/Tp_Svm_Festor_Quentin" title="GitHub" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tp3_Svm</h1>
+<p class="subtitle lead">Example dedicated to <code>Python</code> users</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Quentin Festor <a href="mailto:quentin.festor@etu.umontpellier.fr" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Master Ssd, deuxième année option Biostat
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 9, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction-aux-svm" class="level1">
+<h1>Introduction aux Svm</h1>
+<p>Les machines à vecteurs de support (SVM, pour Support Vector Machines) sont une famille d’algorithmes d’apprentissage supervisé largement utilisés pour résoudre des problèmes de classification et de régression. Leur principe repose sur la recherche de la meilleure séparation possible entre différentes classes de données à l’aide d’hyperplans.</p>
+<p>Comme énoncé précédemment, l’objectif principal d’un SVM est de trouver un hyperplan (une frontière) qui sépare les classes de manière optimale, en maximisant la marge entre les points les plus proches de chaque classe, appelés vecteurs de support. Ce type de modèle est particulièrement apprécié pour sa capacité à gérer des données complexes, voire non linéaires, grâce à l’utilisation de la méthode du noyau.</p>
+<p>Cas linéaire : Si les données sont linéairement séparables, l’algorithme trouve un hyperplan qui sépare les classes en maximisant la distance entre les vecteurs de support des deux classes.</p>
+<p>Cas non linéaire : Si les données ne peuvent pas être séparées par une simple ligne (ou un plan dans des dimensions plus élevées), les SVM utilisent des fonctions noyau (kernel functions) pour transformer les données dans un espace de plus haute dimension où une séparation linéaire devient possible. On a alors plusieurs possibilités, nous utiliserons principalement les noyaux linéaire, polynomiale et gaussien.</p>
+<p>Dans ce tp, l’objectif sera d’explorer l’application des SVM en comparant les performances des modèles avec les différents noyaux et en faisant varier les hyperparamètres afin de comprendre les impacts de ces manipulations.</p>
+<div id="a8ca4e74" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+A simple graphical frontend for Libsvm mainly intended for didactic purposes. You can create data points by point
+and click and visualize the decision region induced by different kernels and parameter settings.
+
+To create positive examples click the left mouse button; to create negative examples click the right button.
+
+If all examples are from the same class, it uses a one-class SVM.
+</code></pre>
+</div>
+</div>
+<p>Pour ce compte rendu, il a été décidé de laisser le code en annèxe afin de ne pas gacher la rédaction. On n’affichera dans la partie principale seulement les résultats commentés ainsi que les graphiques, sauf si l’apparition du code semble pertinante pour la rédaction.</p>
+</section>
+<section id="mise-en-oeuvre" class="level1">
+<h1>Mise en oeuvre</h1>
+<section id="question-1-kernel-linéaire" class="level2">
+<h2 class="anchored" data-anchor-id="question-1-kernel-linéaire">Question 1) Kernel linéaire</h2>
+<p>Nous reprenons le code donné en annexe concernant l’utilisation des SVM et l’appliquons à nos données Iris. Tout d’abord, nous classifions la classe 1 contre la classe 2 en utilisant uniquement les deux premières variables caractéristiques et un noyau linéaire. Les données sont ensuite séparées de manière équitable en deux échantillons : un pour l’entraînement et un pour le test, afin d’évaluer la qualité de notre modèle.</p>
+<p>Nous évaluons ensuite la performance du modèle sur les données d’entraînement, puis sur les données de test, et obtenons les scores suivants :</p>
+<div id="83796fa1" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalization score for linear kernel: 0.78, 0.68</code></pre>
+</div>
+</div>
+<p>L’analyse de ces résultats montre que le modèle SVM avec un noyau linéaire a une précision de 76 % sur les données d’entraînement, ce qui indique une bonne adéquation initiale du modèle. Cependant, une baisse de performance est observée sur les données de test, avec une précision de 66 %, ce qui peut indiquer que le modèle a un léger problème de généralisation. Cela suggère que le modèle ne capture peut-être pas parfaitement la complexité des données, ou qu’il y a peut-être un léger surapprentissage sur l’ensemble d’entraînement. Ce résultat nous donne envie de de tester un autre noyau afin de vérifier si un noyau différent améliorerait la capacité de généralisation.</p>
+</section>
+<section id="question-2-kernel-polynomial" class="level2">
+<h2 class="anchored" data-anchor-id="question-2-kernel-polynomial">Question 2) kernel polynomial</h2>
+<p>Après avoir observé des résultats mitigés avec le noyau linéaire, nous décidons d’utiliser un noyau polynomial et de comparer ses performances. Nous utilisons évidemment la même séparation des données pour garantir une comparaison juste entre les deux approches.</p>
+<p>Les paramètres optimaux trouvés avec la validation croisée sont:</p>
+<div id="e611a903" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-stdout">
+<pre><code>{'C': 0.001, 'degree': 1, 'gamma': 10.0, 'kernel': 'poly'}</code></pre>
+</div>
+</div>
+<p>Avec ces paramètres, on trouve:</p>
+<div id="bab39530" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalization score for polynomial kernel: 0.78, 0.68</code></pre>
+</div>
+</div>
+<p>Le modèle SVM avec un noyau polynomial donne une précision de 70 % sur l’ensemble d’entraînement et 68 % sur l’ensemble de test. Comparé au noyau linéaire, nous constatons donc une légère amélioration de la précision sur les données de test (de 66 % à 68 %), ce qui montre que le noyau polynomial capte légèrement mieux les relations dans les données, notamment des interactions non linéaires. Cependant, on observe également une diminution de la précision sur les données d’entraînement (de 76 % à 70 %), ce qui pourrait indiquer que le modèle polynomial est moins adapté à la structure linéaire des données.</p>
+<p>L’augmentation de la précision sur le test, bien que marginale, suggère que le modèle polynomial pourrait mieux généraliser dans ce contexte. Toutefois, l’amélioration n’est pas suffisamment significative pour justifier l’usage d’un noyau polynomial complexe dans ce cas particulier. Le noyau linéaire reste donc une option solide pour ce type de problème.</p>
+<p>Les graphiques ci-dessous illustrent les deux classifications des données de l’ensemble Iris utilisées ci-dessus.</p>
+</section>
+</section>
+<section id="classification-de-visages" class="level1">
+<h1>Classification de visages</h1>
+<p>Désormais on utilise une seconde base de données, comprenant des images de visages, et on souhaite classifier ces visages. D’abord on ne garde que les personnes possédant au moins 70 photos de leur visage, puis on redimensionne la taille des images car celles-ci prennent beaucoup de place.<br>
+Le code a pour objectif de télécharger un sous-ensemble du dataset LFW, de sélectionner les images de deux personnes spécifiques (Tony Blair et Colin Powell) et de préparer ces données pour une tâche de classification binaire. On peut visualiser un échantillon des images ci-dessous:</p>
+<p>Une fois les données préparées de cette manière, elles peuvent être utilisées pour entraîner un modèle de classification, par exemple un SVM ou un réseau de neurones, pour distinguer les visages de Tony Blair et de Colin Powell.</p>
+<section id="question-4-influence-du-paramètre-de-régularisation" class="level2">
+<h2 class="anchored" data-anchor-id="question-4-influence-du-paramètre-de-régularisation">Question 4) Influence du paramètre de régularisation</h2>
+<p>Comme précédemment, on sépare nos données en deux échantillons de tailles distinctes pour avoir un échantillon d’entrainement et un échantillon de test. On veut montrer l’influence du paramètre de régularisation. Pour ce faire, on décide d’afficher l’erreur de prédiction sur une échelle logarithmique entre 1e5 et 1e-5., et on obtient:</p>
+<p>Le meilleur paramètre C est celui qui donne le score de test le plus élevé.</p>
+<div id="cb85e83e" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-stdout">
+<pre><code>--- Linear kernel ---
+Fitting the classifier to the training set
+Best C: 0.001
+Best score: 1.0
+Predicting the people names on the testing set</code></pre>
+</div>
+</div>
+<p>Dans ce cas, le meilleur C est 1e-3 avec un score de 1. Pour des valeurs de C plus grandes, le score reste stable ce qui indique que les performances se stabilisent.</p>
+<p>Maintenant que nous avons identifié le meilleur C, nous réentraînons le modèle avec cette valeur, et nous effectuons des prédictions finales pour l’ensemble de test. Nous comparons ensuite la précision obtenue à un niveau de chance (prédiction aléatoire).</p>
+<div id="22b18fa1" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-stdout">
+<pre><code>done in 1.113s
+Chance level : 0.6210526315789474
+Accuracy : 0.8736842105263158</code></pre>
+</div>
+</div>
+<p>Nous obtenons que la précision du modèle pour les données de test est de 0.89, alors que le taux de chance (niveau aléatoire) est de 0.62. Cela signifie que le modèle a une performance bien supérieure au hasard, ce qui indique qu’il a bien appris à distinguer les classes à partir des caractéristiques fournies.</p>
+<p>L’échantillon d’images du premier document ci-dessous illustre les résultats de l’algorithme. La deuxième image obtenue montre les coefficients du modèle linéaire appris sous la forme d’une carte de chaleur. Cela permet de visualiser quelles parties des images sont les plus importantes pour le classifieur afin de prendre ses décisions. Ces zones correspondent à des caractéristiques importantes identifiées par le modèle dans les images.</p>
+<p>Les zones importantes pour la prédiction semblent être l’implantation des cheveux au niveau du front, lenez, les yeux, ainsi que la bouche et la forme du crâne.</p>
+</section>
+<section id="question-5-ajout-de-nuisance-sur-les-variables" class="level2">
+<h2 class="anchored" data-anchor-id="question-5-ajout-de-nuisance-sur-les-variables">Question 5) Ajout de nuisance sur les variables</h2>
+<p>Ajouter des variables de nuisance dans les données d’apprentissage est une méthode pour évaluer la robustesse et la capacité de généralisation d’un modèle de classification. Les variables de nuisance sont des caractéristiques ajoutées artificiellement qui n’ont aucune relation avec la variable cible. Il peut y avoir plusieurs objectifs à cet ajout. L’objectif principal est d’examiner l’impact de ces variables sur la performance du modèle et de vérifier si le modèle peut encore faire des prédictions précises malgré la présence de ces informations non pertinentes.</p>
+<div id="5a3964bb" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-stdout">
+<pre><code>Score sans variable de nuisance
+Generalization score for linear kernel: 1.0, 0.9210526315789473 
+
+Score avec variable de nuisance
+Generalization score for linear kernel: 0.9947368421052631, 0.531578947368421 
+</code></pre>
+</div>
+</div>
+<p>Sans ajout de variables de nuisance, le modèle atteint une précision parfaite de 1.0 sur l’ensemble d’entraînement, et une précision de 0.9 sur l’ensemble de test. Cela indique que le modèle est très performant et capable de bien généraliser sur des données non vues.</p>
+<p>Lorsque des variables de nuisance sont ajoutées, la précision sur l’ensemble de test chute considérablement à environ 0.51, près du niveau de chance pour ce problème (0.62). Cependant, la précision sur l’ensemble d’entraînement reste à 1.0. Ce résultat montre que, bien que le modèle continue à bien performer sur les données d’entraînement, il est moins capable de généraliser sur de nouvelles données lorsqu’il est confronté à des informations non pertinentes.</p>
+</section>
+<section id="question-6-réduction-des-dimensions-pca" class="level2">
+<h2 class="anchored" data-anchor-id="question-6-réduction-des-dimensions-pca">Question 6) Réduction des dimensions PCA</h2>
+<p>Après avoir examiné l’impact des variables de nuisance sur la performance du modèle, il est pertinent de se pencher sur une autre technique importante de prétraitement des données : la réduction de dimensions. En utilisant l’Analyse en Composantes Principales (PCA), nous cherchons à réduire le nombre de caractéristiques tout en conservant autant d’information que possible. Cette méthode peut aider à améliorer la performance du modèle en éliminant le bruit et en simplifiant la représentation des données. Nous allons donc appliquer la PCA sur les données perturbées par le bruit et évaluer comment cette réduction de dimension influence la précision du modèle SVM. On essaie une fois avec 20 composantes, une fois avec 80, et une fois avec 120.</p>
+<div id="5104d258" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-stdout">
+<pre><code>Score apres reduction de dimension PCA pour 80 composantes
+Generalization score for linear kernel: 0.8947368421052632, 0.5263157894736842 
+
+Score apres reduction de dimension PCA pour 120 composantes
+Generalization score for linear kernel: 1.0, 0.5210526315789473 
+</code></pre>
+</div>
+</div>
+<p>On remarque qu’avec 20 composantes les calculs sont trop longs, de même pour tout nombre inférieur à 80, donc on se contente de 80, et 120. On observe que moins on garde de composantes, plus le score remonte. Cependant il remonte faiblement, probablement car il faut diminuer largement le nombre de composantes pour obtenir un score bon, ce qui nécessite beaucoup de temps de calcul.</p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Pour résumer, l’objectif avec les SVM est de maximiser les performances de prédiction en choisissant un noyau optimal et en ajustant les hyperparamètres. Après avoir divisé les données en échantillons d’entraînement et de test, un score élevé sur l’ensemble d’entraînement indique un bon ajustement initial, mais seul un score élevé sur l’ensemble de test garantit que le modèle généralisera bien sur de nouvelles données. L’ajustement du paramètre de régularisation peut améliorer la précision. Nous avons également observé que l’ajout de variables de nuisance réduit les performances, mais ces dernières peuvent être restaurées en appliquant une réduction de dimension via l’analyse en composantes principales (PCA).</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/Qufst\.github\.io\/Tp_Svm_Festor_Quentin\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/Qufst/Tp_Svm_Festor_Quentin/blob/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/Qufst/Tp_Svm_Festor_Quentin/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
