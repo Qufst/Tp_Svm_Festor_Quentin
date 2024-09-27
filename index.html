@@ -167,9 +167,9 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="question-1-kernel-linéaire">Question 1) Kernel linéaire</h2>
 <p>Nous reprenons le code donné en annexe concernant l’utilisation des SVM et l’appliquons à nos données Iris. Tout d’abord, nous classifions la classe 1 contre la classe 2 en utilisant uniquement les deux premières variables caractéristiques et un noyau linéaire. Les données sont ensuite séparées de manière équitable en deux échantillons : un pour l’entraînement et un pour le test, afin d’évaluer la qualité de notre modèle.</p>
 <p>Nous évaluons ensuite la performance du modèle sur les données d’entraînement, puis sur les données de test, et obtenons les scores suivants :</p>
-<div id="2514858c" class="cell" data-execution_count="2">
+<div id="e082dcbb" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
-<pre><code>Generalization score for linear kernel: 0.78, 0.7</code></pre>
+<pre><code>Generalization score for linear kernel: 0.68, 0.76</code></pre>
 </div>
 </div>
 <p>L’analyse de ces résultats montre que le modèle SVM avec un noyau linéaire a une précision de 76 % sur les données d’entraînement, ce qui indique une bonne adéquation initiale du modèle. Cependant, une baisse de performance est observée sur les données de test, avec une précision de 66 %, ce qui peut indiquer que le modèle a un léger problème de généralisation. Cela suggère que le modèle ne capture peut-être pas parfaitement la complexité des données, ou qu’il y a peut-être un léger surapprentissage sur l’ensemble d’entraînement. Ce résultat nous donne envie de de tester un autre noyau afin de vérifier si un noyau différent améliorerait la capacité de généralisation.</p>
@@ -178,15 +178,15 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="question-2-kernel-polynomial">Question 2) kernel polynomial</h2>
 <p>Après avoir observé des résultats mitigés avec le noyau linéaire, nous décidons d’utiliser un noyau polynomial et de comparer ses performances. Nous utilisons évidemment la même séparation des données pour garantir une comparaison juste entre les deux approches.</p>
 <p>Les paramètres optimaux trouvés avec la validation croisée sont:</p>
-<div id="7e1bf474" class="cell" data-execution_count="3">
+<div id="46dcdeb5" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
-<pre><code>{'C': 1.0, 'degree': 1, 'gamma': 10.0, 'kernel': 'poly'}</code></pre>
+<pre><code>{'C': 0.03162277660168379, 'degree': 2, 'gamma': 10.0, 'kernel': 'poly'}</code></pre>
 </div>
 </div>
 <p>Avec ces paramètres, on trouve:</p>
-<div id="85b5b9e1" class="cell" data-execution_count="4">
+<div id="049f258c" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
-<pre><code>Generalization score for polynomial kernel: 0.78, 0.7</code></pre>
+<pre><code>Generalization score for polynomial kernel: 0.7, 0.68</code></pre>
 </div>
 </div>
 <p>Le modèle SVM avec un noyau polynomial donne une précision de 70 % sur l’ensemble d’entraînement et 68 % sur l’ensemble de test. Comparé au noyau linéaire, nous constatons donc une légère amélioration de la précision sur les données de test (de 66 % à 68 %), ce qui montre que le noyau polynomial capte légèrement mieux les relations dans les données, notamment des interactions non linéaires. Cependant, on observe également une diminution de la précision sur les données d’entraînement (de 76 % à 70 %), ce qui pourrait indiquer que le modèle polynomial est moins adapté à la structure linéaire des données.</p>
@@ -203,7 +203,7 @@ Le code a pour objectif de télécharger un sous-ensemble du dataset LFW, de sé
 <h2 class="anchored" data-anchor-id="question-4-influence-du-paramètre-de-régularisation">Question 4) Influence du paramètre de régularisation</h2>
 <p>Comme précédemment, on sépare nos données en deux échantillons de tailles distinctes pour avoir un échantillon d’entrainement et un échantillon de test. On veut montrer l’influence du paramètre de régularisation. Pour ce faire, on décide d’afficher l’erreur de prédiction sur une échelle logarithmique entre 1e5 et 1e-5., et on obtient:</p>
 <p>Le meilleur paramètre C est celui qui donne le score de test le plus élevé.</p>
-<div id="e95ea0c6" class="cell" data-execution_count="8">
+<div id="3d8e0329" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
 <pre><code>--- Linear kernel ---
 Fitting the classifier to the training set
@@ -214,9 +214,9 @@ Predicting the people names on the testing set</code></pre>
 </div>
 <p>Dans ce cas, le meilleur C est 1e-3 avec un score de 1. Pour des valeurs de C plus grandes, le score reste stable ce qui indique que les performances se stabilisent.</p>
 <p>Maintenant que nous avons identifié le meilleur C, nous réentraînons le modèle avec cette valeur, et nous effectuons des prédictions finales pour l’ensemble de test. Nous comparons ensuite la précision obtenue à un niveau de chance (prédiction aléatoire).</p>
-<div id="65892cae" class="cell" data-execution_count="9">
+<div id="cba704c5" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
-<pre><code>done in 3.169s
+<pre><code>done in 2.935s
 Chance level : 0.6210526315789474
 Accuracy : 0.9105263157894737</code></pre>
 </div>
@@ -228,13 +228,13 @@ Accuracy : 0.9105263157894737</code></pre>
 <section id="question-5-ajout-de-nuisance-sur-les-variables" class="level2">
 <h2 class="anchored" data-anchor-id="question-5-ajout-de-nuisance-sur-les-variables">Question 5) Ajout de nuisance sur les variables</h2>
 <p>Ajouter des variables de nuisance dans les données d’apprentissage est une méthode pour évaluer la robustesse et la capacité de généralisation d’un modèle de classification. Les variables de nuisance sont des caractéristiques ajoutées artificiellement qui n’ont aucune relation avec la variable cible. Il peut y avoir plusieurs objectifs à cet ajout. L’objectif principal est d’examiner l’impact de ces variables sur la performance du modèle et de vérifier si le modèle peut encore faire des prédictions précises malgré la présence de ces informations non pertinentes.</p>
-<div id="f44a1e18" class="cell" data-execution_count="11">
+<div id="0e6c7a2c" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-stdout">
 <pre><code>Score sans variable de nuisance
-Generalization score for linear kernel: 1.0, 0.9157894736842105 
+Generalization score for linear kernel: 1.0, 0.9052631578947369 
 
 Score avec variable de nuisance
-Generalization score for linear kernel: 1.0, 0.46842105263157896 
+Generalization score for linear kernel: 0.9947368421052631, 0.5263157894736842 
 </code></pre>
 </div>
 </div>
@@ -244,13 +244,13 @@ Generalization score for linear kernel: 1.0, 0.46842105263157896
 <section id="question-6-réduction-des-dimensions-pca" class="level2">
 <h2 class="anchored" data-anchor-id="question-6-réduction-des-dimensions-pca">Question 6) Réduction des dimensions PCA</h2>
 <p>Après avoir examiné l’impact des variables de nuisance sur la performance du modèle, il est pertinent de se pencher sur une autre technique importante de prétraitement des données : la réduction de dimensions. En utilisant l’Analyse en Composantes Principales (PCA), nous cherchons à réduire le nombre de caractéristiques tout en conservant autant d’information que possible. Cette méthode peut aider à améliorer la performance du modèle en éliminant le bruit et en simplifiant la représentation des données. Nous allons donc appliquer la PCA sur les données perturbées par le bruit et évaluer comment cette réduction de dimension influence la précision du modèle SVM. On essaie une fois avec 20 composantes, une fois avec 80, et une fois avec 120.</p>
-<div id="ef892c76" class="cell" data-execution_count="12">
+<div id="4eb9077f" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-stdout">
 <pre><code>Score apres reduction de dimension PCA pour 80 composantes
-Generalization score for linear kernel: 0.9052631578947369, 0.5473684210526316 
+Generalization score for linear kernel: 0.8947368421052632, 0.5052631578947369 
 
 Score apres reduction de dimension PCA pour 120 composantes
-Generalization score for linear kernel: 0.8947368421052632, 0.46842105263157896 
+Generalization score for linear kernel: 0.8157894736842105, 0.48947368421052634 
 </code></pre>
 </div>
 </div>
