@@ -1,8 +1,8 @@
 project:
   type: website
-  output-dir: docs
+  output-dir: pdf
   render:
-    - index.qmd
+    - Tp_apprentissage_statistique.pdf
     - annexe.qmd
 
 website:
@@ -12,10 +12,6 @@ website:
   back-to-top-navigation: true
   title: "Tp3_Svm"
   sidebar: true
-  format:
-  html:
-    fig-width: 7
-    fig-height: 5
   navbar:
     search: true
     tools: 
@@ -23,15 +19,12 @@ website:
         href: https://github.com/Qufst/Tp_Svm_Festor_Quentin
         text: GitHub
     left:
-      - href: index.qmd
+      - href: Tp_apprentissage_statistique.pdf
       - href: annexe.qmd
-
-
 
 jupyter: python3
 
 editor: visual
-
 
 publish:
   gh-pages:
