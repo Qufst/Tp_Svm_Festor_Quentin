@@ -5,7 +5,7 @@ project:
     - annexe.qmd     
 
 files:
-  - Tp_apprentissage_statistique.pdf
+  - docs/Tp_apprentissage_statistique.pdf
 
 website:
   repo-url: https://github.com/Qufst/Tp_Svm_Festor_Quentin
@@ -22,7 +22,7 @@ website:
         text: GitHub
     left:
       - text: "PDF"
-        href: Tp_apprentissage_statistique.pdf
+        href: docs/Tp_apprentissage_statistique.pdf
       - text: "Annexe"
         href: annexe.qmd 
 
