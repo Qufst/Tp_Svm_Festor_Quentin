@@ -3,7 +3,9 @@ project:
   output-dir: pdf
   render:
     - annexe.qmd     
-    - Tp_apprentissage_statistique.pdf
+
+files:
+  - Tp_apprentissage_statistique.pdf
 
 website:
   repo-url: https://github.com/Qufst/Tp_Svm_Festor_Quentin
@@ -21,8 +23,7 @@ website:
     left:
       - text: "Annexe"
         href: annexe.qmd 
-      - text: "PDF"
-        href: Tp_apprentissage_statistique.pdf 
+
 
 jupyter: python3
 
