@@ -2,7 +2,6 @@ project:
   type: website
   output-dir: pdf
   render:
-    - Tp_apprentissage_statistique.pdf
     - annexe.qmd
 
 website:
@@ -19,7 +18,6 @@ website:
         href: https://github.com/Qufst/Tp_Svm_Festor_Quentin
         text: GitHub
     left:
-      - href: Tp_apprentissage_statistique.pdf
       - href: annexe.qmd
 
 jupyter: python3
