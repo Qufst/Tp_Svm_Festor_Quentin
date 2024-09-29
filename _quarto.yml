@@ -1,9 +1,8 @@
 project:
   type: website
   render:
-    - annexe.qmd  # Rend le fichier annexe.qmd en HTML
-  
-# Inclure le PDF dans la sortie du site
+    - annexe.qmd     
+
 files:
   - Tp_apprentissage_statistique.pdf
 
@@ -21,11 +20,17 @@ website:
         href: https://github.com/Qufst/Tp_Svm_Festor_Quentin
         text: GitHub
     left:
-      - text: "Annexe"
-        href: annexe.qmd   # Lien vers le fichier annexe.qmd (rendu en HTML)
       - text: "PDF"
-        href: Tp_apprentissage_statistique.pdf   # Lien vers le fichier PDF statique
+        href: Tp_apprentissage_statistique.pdf
+      - text: "Annexe"
+        href: annexe.qmd 
+
 
 jupyter: python3
 
 editor: visual
+
+publish:
+  gh-pages:
+    branch: gh-pages
+    orphan: true
