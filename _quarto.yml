@@ -21,6 +21,8 @@ website:
         href: https://github.com/Qufst/Tp_Svm_Festor_Quentin
         text: GitHub
     left:
+      - text: "PDF"
+        href: Tp_apprentissage_statistique.pdf
       - text: "Annexe"
         href: annexe.qmd 
 
