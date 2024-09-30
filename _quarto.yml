@@ -1,11 +1,8 @@
 project:
   type: website
-  output-dir: docs
+  output-dir: html
   render:
     - annexe.qmd     
-
-files:
-  - docs/Tp_apprentissage_statistique.pdf
 
 website:
   repo-url: https://github.com/Qufst/Tp_Svm_Festor_Quentin
@@ -21,8 +18,6 @@ website:
         href: https://github.com/Qufst/Tp_Svm_Festor_Quentin
         text: GitHub
     left:
-      - text: "PDF"
-        href: docs/Tp_apprentissage_statistique.pdf
       - text: "Annexe"
         href: annexe.qmd 
 
